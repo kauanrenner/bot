@@ -1,12 +1,6 @@
-densidade_agua = {
-        '17': 0.9988,
-        '18': 0.9986,
-        '19': 0.9984,
-        '20': 0.9982,
-        '21': 0.9980,
-        '22': 0.9978,
-        '23': 0.9976,
-        '24': 0.9973
-    }
+import pandas as pd
 
-print(densidade_agua['18'])
+sheet = pd.read_excel('CALIBRACAO PIC.xlsx', sheet_name=['Planilha3'])
+cs = sheet['Planilha3']
+
+print(cs['PIC'].count())

@@ -2,18 +2,22 @@ import random
 import pandas as pd
 
 def bot_Umidade():
-    lista = [212, 162, 171, 100, 81, 151, 511, 322, 517, 513, 516, 208, 425, 13, 197, 251, 21, 320, 506, 267, 923, 67, 502, 510, 509, 350, 18, 503, 104, 225, 115, 155, 235, 505, 512, 507, 517, 505, 276, 982, 511, 935, 267, 197, 259]
-    taras = [26.71, 31.35, 20.5, 29.68, 29.79, 24.74, 30.6, 28.53, 26.69, 28.63, 13.8, 30.85, 24.68, 26.57, 28.7, 30.16, 31.51, 31.32, 13.41, 29.8, 30.54, 26.39, 12.83, 29.67, 14, 29.65, 23.79, 15.38, 29.55, 29.12, 13.62, 30.57, 15.48, 12.91, 26.11, 13.54, 26.67, 12.91, 29.67, 13.41, 30.60, 29.90, 29.80, 28.70, 30.75]
-
     sheet = pd.read_excel('CALIBRACAO PIC.xlsx',sheet_name=['Planilha3'])
     planilha = sheet['Planilha3']
 
-    pics, pesos = [], []
+    cap_sheet = pd.read_excel('capsulas.xlsx', sheet_name=['Sheet1'])
+    cs = cap_sheet['Sheet1']
 
-    for i in range(35):
-        pic, peso = planilha.iat[i, 0], planilha.iat[i, 1]
-        pics.append(pic)
-        pesos.append(round(peso, 2))
+    pics, pesos, lista, taras = [], [], [], []
+
+    for i in range(45):
+        if i <= planilha['PIC'].count() - 1:
+            pic, peso = planilha.iat[i, 0], planilha.iat[i, 1]
+            pics.append(pic)
+            pesos.append(round(peso, 2))
+        cap, tara = cs.iat[i, 0], cs.iat[i, 1]
+        lista.append(cap)
+        taras.append(tara)
 
     densidade_agua = {
         '17': 0.9988,
@@ -97,12 +101,20 @@ def bot_Umidade():
         calc_peso_seco(lista_amostras[i], amostras_pics[i])
     
     c = 1
-    for l in lista_amostras:
+    for l, a in zip(lista_amostras, amostras_pics):
         print(f'Amostra {c}')
         for i in range(1):
+            print(">>>>>>>>>>>>UMIDADE<<<<<<<<<<<<<")
             print(f'Cápsulas: {l[i].numero}  {l[i+1].numero}  {l[i+2].numero}')
             print(f'Peso Úmido: {l[i].peso_umido}  {l[i+1].peso_umido}  {l[i+2].peso_umido}')
             print(f'Peso Seco: {l[i].peso_seco}  {l[i+1].peso_seco}  {l[i+2].peso_seco}')
+            print(">>>>>>>>>>>>MES<<<<<<<<<<<<<")
+            print(f'Picnômetro: {a[i].numero}  {a[i+1].numero}')
+            print(f'Temperatura: {temperatura}°C')
+            print(f'Picnômetro + material: {round(a[i].peso_material, 2)}  {round(a[i+1].peso_material, 2)}')
+            print(f'Picnômetro + água: {a[i].peso_agua}  {a[i+1].peso_agua}')
+            print(f'Amostra Úmida: {a[i].umida}  {a[i+1].umida}')
+            print(f'MES: {round(a[i].mes, 3)}  {round(a[i+1].mes, 3)}')
         c += 1
         print()
         print('----------------------------------')
